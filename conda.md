@@ -1,6 +1,7 @@
 conda activate splicing_test
 
 conda create -n splicing_test -c conda-forge -c bioconda \
+    multiqc \
     star \
     samtools \
     regtools \

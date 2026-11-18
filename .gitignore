@@ -21,7 +21,6 @@ logs/
 
 # Data files
 *.fasta
-*.fastq.gz
 *.bam
 *.bai
 *.sam
@@ -30,4 +29,4 @@ logs/
 *_STARpass1/
 ref/
 samples/
-subsampled/
+star_out/
