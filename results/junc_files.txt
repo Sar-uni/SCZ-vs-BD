@@ -1,0 +1,4 @@
+results/junc/SRR3438667.junc
+results/junc/SRR3438668.junc
+results/junc/SRR3438633.junc
+results/junc/SRR3438631.junc
