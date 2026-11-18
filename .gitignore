@@ -1,0 +1,33 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual env
+.venv/
+venv/
+env/
+ENV/
+
+# Environment vars + secrets
+.env
+.env.local
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+msc/
+logs/
+
+# Data files
+*.fasta
+*.fastq.gz
+*.bam
+*.bai
+*.sam
+*_STARtmp/
+*_STARgenome/
+*_STARpass1/
+ref/
+samples/
+subsampled/
