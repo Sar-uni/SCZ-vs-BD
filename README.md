@@ -48,7 +48,24 @@ GEO SRA Accession #s for DLPFC (B & S) Samples
     - via wget ftp://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_XX/...
     - sjdboverhang = 49 (read length of 50 used in study)
 
-
+## Test Run Steps
+- Genome index creation
+    - Downloaded `GRCh38.primary_assembly.genome.fa.gz` and `gencode.v50.primary_assembly.annotation.gtf.gz`
+    - Extracted only annotations on chr21 instead of using entire genome (`chr21.gtf`, `chr21.fa`)
+    - Generate index with follow command:
+    ```
+    STAR --runThreadN 4 \
+     --runMode genomeGenerate \
+     --genomeDir chr21_star_index \
+     --genomeFastaFiles chr21.fa \
+     --sjdbGTFfile chr21.gtf \
+     --sjdbOverhang 49 \
+     --genomeSAindexNbases 11
+    ```
+- Ran `create_test_samples.sh` to converted full .fastq.gz files to smaller .sub.fastq.gz.
+Samples stored in test_sample/subsampled
+- Aligned samples by running `run_star.sh`
+- Matrices stored in `results/`
 
 ## cluster notes
 - .junc files appending immediately after each sample (may conflict). can  do after
