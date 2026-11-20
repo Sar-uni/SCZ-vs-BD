@@ -61,6 +61,13 @@ for R1_FILE in "${MERGED_DIR}"/*_R1.fastq.gz; do
 
     # add path for LeafCutter manifest
     echo "${JUNC_DIR}/${SAMPLE}.junc" >> results/junc_files.txt
+
+    # rm large BAM files
+    if [[ -s "${COUNTS_DIR}/${SAMPLE}_ReadsPerGene.out.tab" && -s "${JUNC_DIR}/${SAMPLE}.junc" ]]; then
+        rm -f "${BAM_FILE}" "${BAM_FILE}.bai"
+    else
+        echo "Oops: no ${SAMPLE}; keeping BAM." >&2
+    fi
 done
 
 # combine FastQC and STAR logs
