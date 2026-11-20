@@ -1,40 +1,43 @@
 #!/bin/bash
+
 set -euo pipefail
 
 cd "$(dirname "$0")/.."
 
 # Paths
-GENOME_DIR="test_sample/ref/chr21_star_index"
-RAW_DIR="test_sample/samples"
-SUB_DIR="test_sample/subsampled"
-OUT_STAR="test_sample/star_out"
+GENOME_DIR="ref/star_index"
+MERGED_DIR="data/merged_fastqs"
+OUT_STAR="results/star_out"
 JUNC_DIR="results/junc"
 COUNTS_DIR="results/gene_counts"
 QC_DIR="results/qc"
+THREADS=8
 
-mkdir -p "${SUB_DIR}" "${OUT_STAR}" "${JUNC_DIR}" "${COUNTS_DIR}" "${QC_DIR}/fastqc"
+mkdir -p "${OUT_STAR}" "${JUNC_DIR}" "${COUNTS_DIR}" "${QC_DIR}/fastqc" 
 
-# test samples
-SAMPLES=("SRR3438667" "SRR3438668" "SRR3438633" "SRR3438631")
-
-# clear file
+# clear LeafCutter manifest file
 > results/junc_files.txt
 
-for SAMPLE in "${SAMPLES[@]}"; do
-    echo "=== Processing ${SAMPLE} ==="
+# process merged files
+for R1_FILE in "${MERGED_DIR}"/*_R1.fastq.gz; do
+    # get GSM (merged_fastqs/GSMXX_R1.fastq.gz -> GSMXX)
+    SAMPLE=$(basename "${R1_FILE}" "_R1.fastq.gz")
+    R2_FILE="${MERGED_DIR}/${SAMPLE}_R2.fastq.gz"
 
-    # FastQc on samples
+    echo "---Processing ${SAMPLE}"
+
+    # FastQC on merged samples
     fastqc \
-        -t 4 \
+        -t "${THREADS}" \
         --outdir "${QC_DIR}/fastqc" \
-        "${SUB_DIR}/${SAMPLE}/${SAMPLE}_1.sub.fastq.gz" \
-        "${SUB_DIR}/${SAMPLE}/${SAMPLE}_2.sub.fastq.gz"
+        "${R1_FILE}" \
+        "${R2_FILE}"
     
-    # star alingment
+    # STAR alignment
     STAR \
-        --runThreadN 4 \
+        --runThreadN "${THREADS}" \
         --genomeDir "${GENOME_DIR}" \
-        --readFilesIn "${SUB_DIR}/${SAMPLE}/${SAMPLE}_1.sub.fastq.gz" "${SUB_DIR}/${SAMPLE}/${SAMPLE}_2.sub.fastq.gz" \
+        --readFilesIn "${R1_FILE}" "${R2_FILE}" \
         --readFilesCommand zcat \
         --twopassMode Basic \
         --quantMode GeneCounts \
@@ -47,9 +50,9 @@ for SAMPLE in "${SAMPLES[@]}"; do
     # copy gene counts to results 
     cp "${OUT_STAR}/${SAMPLE}_ReadsPerGene.out.tab" "${COUNTS_DIR}/${SAMPLE}_ReadsPerGene.out.tab"
 
-    # Index BAM and extract junctions
+    # index BAM and extract junctions
     BAM_FILE="${OUT_STAR}/${SAMPLE}_Aligned.sortedByCoord.out.bam"
-    samtools index -@ 4 "${BAM_FILE}"
+    samtools index -@ "${THREADS}" "${BAM_FILE}"
 
     regtools junctions extract \
         -a 8 -m 50 -M 500000 -s XS \
