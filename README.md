@@ -63,5 +63,7 @@ project_root/
 ```
 
 ## Post aligntment
-- LeafCutter
-    - git leafcutter repo: git clone https://github.com/davidaknowles/leafcutter
+- LeafCutter2
+    - leafcutter2 repos: `https://github.com/leafcutter2/leafcutter2.git` and `https://github.com/leafcutter2/leafcutter-ds.git`
+    - .GTF file can stay gz, but fa needs to be unzipped and .fai index needs to be created: `samtools faidx GRCh38.primary_assembly.genome.fa`
+    - default, leafcutter-ds uses the first group appearing in groups_file.txt

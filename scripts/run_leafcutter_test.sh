@@ -3,43 +3,48 @@ set -euo pipefail
 
 cd "$(dirname "$0")/.."
 
-# paths
-LEAFCUTTER_DIR="${HOME}/tools/leafcutter"
+# Paths (GONNA CHANGE TO full .GTF and UNZIP .FA *)
 JUNC_MANIFEST="results/junc_files.txt"
-OUT_DIR="results/leafcutter_test"
+OUT_DIR="results/leafcutter2_test"
 GROUPS_FILE="${OUT_DIR}/groups_file.txt"
+GTF_FILE="ref/gencode/chr21.gtf"   
+FASTA_FILE="ref/gencode/chr21.fa"       
 
 mkdir -p "${OUT_DIR}"
 
-
-# Intron Clustering (lowere m and p for now)
-echo "1. clustering introns using leafcutter.regtools"
-python3 "${LEAFCUTTER_DIR}/clustering/leafcutter_cluster_regtools.py" \
+# Intron Clustering + functional classification: 
+#   junctions annotated as productive, unproductive, ambiguous, or intergenic based on GTF and FASTA
+echo "Clustering and classifying introns using leafcutter2"
+leafcutter2 \
     -j "${JUNC_MANIFEST}" \
     -r "${OUT_DIR}" \
     -o test_chr21 \
-    -l 500000 \
-    -m 5 \
-    -p 0.0001
+    -A "${GTF_FILE}" \
+    -G "${FASTA_FILE}" \
+    --maxintronlen 500000 \
+    --minclureads 5 \
+    --mincluratio 0.0001
 
-COUNTS_FILE="${OUT_DIR}/test_chr21_perind_numers.counts.gz"
+# Leafcuter2 gives .junction_counts.gz (unlike perind)
+COUNTS_FILE="${OUT_DIR}/test_chr21.junction_counts.gz"
 
-# differential splicing 
-# test group file
-# format (tab seperte): <sample_name> (need to match .junc filenames) <condition>
+# Differential Splicing
+# tab-separate <sample_name> (GON CHANGE TO GSM FOR FINAL *) <condition>
 cat <<EOF > "${GROUPS_FILE}"
 SRR3438667	Bipolar
 SRR3438668	Schizophrenia
 SRR3438633	Schizophrenia
 SRR3438631	Bipolar
 EOF
-# TODO: fix package dependancy issue with leafcutter_ds.R. (leafcutter is incomplete package)
-# -i -g set to 2 for 
-echo "2. DES leafcutter_ds.R"
-Rscript "${LEAFCUTTER_DIR}/scripts/leafcutter_ds.R" \
+
+# SMALL VALUES TEST *
+echo "--leafcutter-ds"
+leafcutter-ds \
     --num_threads 4 \
     --min_samples_per_intron 2 \
     --min_samples_per_group 2 \
+    --min_coverage 5 \
+    --min_unique_vals 2 \
     --output_prefix "${OUT_DIR}/bip_vs_scz" \
     "${COUNTS_FILE}" \
     "${GROUPS_FILE}"

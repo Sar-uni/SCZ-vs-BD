@@ -1,4 +1,4 @@
 SRR3438667	Bipolar
-SRR3438668	Bipolar
+SRR3438668	Schizophrenia
 SRR3438633	Schizophrenia
-SRR3438631	Schizophrenia
+SRR3438631	Bipolar
