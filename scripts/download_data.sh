@@ -2,7 +2,7 @@
 set -euo pipefail
 
 SAMPLESHEET="samplesheet.tsv"
-BASE_DIR="raw_fastqs"
+BASE_DIR="data/raw_fastqs"
 
 mkdir -p "$BASE_DIR"
 
