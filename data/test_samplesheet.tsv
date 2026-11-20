@@ -1,0 +1,2 @@
+GSM	sample_title	diagnosis	runs	R1_urls	R2_urls
+GSM2132213	X1881_DLPFC_B_SL32229	B	SRR3438571 SRR3438572	ftp.sra.ebi.ac.uk/vol1/fastq/SRR343/001/SRR3438571/SRR3438571_1.fastq.gz ftp.sra.ebi.ac.uk/vol1/fastq/SRR343/002/SRR3438572/SRR3438572_1.fastq.gz	ftp.sra.ebi.ac.uk/vol1/fastq/SRR343/001/SRR3438571/SRR3438571_2.fastq.gz ftp.sra.ebi.ac.uk/vol1/fastq/SRR343/002/SRR3438572/SRR3438572_2.fastq.gz
