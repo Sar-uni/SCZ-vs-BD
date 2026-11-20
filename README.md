@@ -23,12 +23,7 @@ GEO SRA Accession #s for DLPFC (B & S) Samples
 
 ## Pre-reqs:
 - star, samtools, regtools, fastqc, multiqc installed (used conda to create env)
-- STAR requires genome index in `ref/star_index`
-    - requires **unzipped** gencode fasta and gtf (`ref/gencode`)
-    - Unzip command:
-    ```
-    gunzip GRCh38.primary_assembly.genome.fa.gz gencode.v50.primary_assembly.annotation.gtf.gz
-    ```
+- STAR requires genome index
 - merged .fastq.gz files in `data/merged_fastqs` (created by `scripts/download_data.sh`)
 
 ## Alignment Steps
