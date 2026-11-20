@@ -10,8 +10,9 @@ External libraries needed:
 Downloaded raw FASTQ files for DLPFC SCZ (n=29) and BD (n=28) samples
 from ENA, then ran STAR tool for alignment
 
-GENCODE fasta and .gtf files (for creating genome index)
+GENCODE fasta and .gtf (gene transfer format) files (for creating genome index)
 - https://www.gencodegenes.org/human/ 
+- GTF headers: chr | source | feature type | start | end | confidence | strand | reading frame | metadata pairs 
 
 Pre-Paired FastQ files from ENA:
 - https://www.ebi.ac.uk/ena/browser/view/PRJNA319583
@@ -63,7 +64,17 @@ project_root/
 ```
 
 ## Post aligntment
-- LeafCutter2
-    - leafcutter2 repos: `https://github.com/leafcutter2/leafcutter2.git` and `https://github.com/leafcutter2/leafcutter-ds.git`
-    - .GTF file can stay gz, but fa needs to be unzipped and .fai index needs to be created: `samtools faidx GRCh38.primary_assembly.genome.fa`
-    - default, leafcutter-ds uses the first group appearing in groups_file.txt
+LeafCutter2
+- leafcutter2 repos: `https://github.com/leafcutter2/leafcutter2.git` and `https://github.com/leafcutter2/leafcutter-ds.git`
+- .GTF file can stay gz, but fa needs to be unzipped and .fai index needs to be created: `samtools faidx GRCh38.primary_assembly.genome.fa`
+- default, leafcutter-ds uses the first group appearing in groups_file.txt
+
+DESeq2.R 
+- ReadPerGene.out.tab
+    - Summary (first 4 rows): N_unmapped, N_multimapping, N_noFeature, N_ambiguous
+    - filter low counts
+- GENE ID | Unstranded | Forward | Backward
+- compare w/ leafcutter's UP clusters. Increased unproductive/NMD splciing often means downregulation at total gene expression
+
+Merging Results
+- lc2 + deseq2 integrated table headers: cluster,status,loglr,df,p,lc_padj,genes,annotations,intron,logef_Schizophrenia,psi_Bipolar,psi_Schizophrenia,deltapsi,func_type,gene_symbol,gene_id,baseMean,log2FoldChange,lfcSE,stat,pvalue,deseq_padj

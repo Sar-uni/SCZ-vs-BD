@@ -1,14 +1,21 @@
-conda activate splicing_test
+conda activate bme
 
-conda create -n splicing_test -c conda-forge -c bioconda \
+conda create -n bme -c conda-forge -c bioconda \
     multiqc \
     star \
     samtools \
     regtools \
     fastqc \
     fastp \
+    pandas \
+    numpy \
+    scipy \
+    matplotlib \
+    seaborn \
+    statsmodels \
     r-base \
-    r-essentials
+    r-essentials \
+    bioconductor-deseq2
 
 # leafcutter2 rep
 git clone https://github.com/leafcutter2/leafcutter2.git

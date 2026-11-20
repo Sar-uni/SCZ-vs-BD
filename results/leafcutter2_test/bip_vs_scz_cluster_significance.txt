@@ -4,4 +4,4 @@ chr21:clu_2_+	<=1 sample with coverage>0	NA	NA	NA	NA	NA	IN
 chr21:clu_3_+	<=1 sample with coverage>0	NA	NA	NA	NA	NA	IN
 chr21:clu_4_+	<=1 sample with coverage>0	NA	NA	NA	NA	NA	IN
 chr21:clu_5_-	<2 introns used in >=min_samples_per_intron samples	NA	NA	NA	NA	NA	IN
-chr21:clu_6_-	Success	1.299346923828125	3.0	0.4577185782693908	0.9154371565387815	NA	PR
+chr21:clu_6_-	Success	1.299346923828125	3.0	0.4577185782693908	0.9154371565387815	APP	PR
