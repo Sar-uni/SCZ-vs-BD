@@ -60,9 +60,6 @@ regtools junctions extract \
     "${BAM_FILE}" \
     -o "${JUNC_DIR}/${SAMPLE}.junc"
 
-# add path for LeafCutter manifest
-echo "${JUNC_DIR}/${SAMPLE}.junc" >> results/junc_files.txt
-
 # rm large BAM files
 if [[ -s "${COUNTS_DIR}/${SAMPLE}_ReadsPerGene.out.tab" && -s "${JUNC_DIR}/${SAMPLE}.junc" ]]; then
     rm -f "${BAM_FILE}" "${BAM_FILE}".bai "${BAM_FILE%.bam}".bai
