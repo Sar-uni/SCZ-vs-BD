@@ -69,12 +69,19 @@ LeafCutter2
 - .GTF file can stay gz, but fa needs to be unzipped and .fai index needs to be created: `samtools faidx GRCh38.primary_assembly.genome.fa`
 - default, leafcutter-ds uses the first group appearing in groups_file.txt
 
+Files Table formats
+- `.junc` files: chr | start | end | strand | read_count
+- `.junction_counts.gz` (splicing feature matrix): intron id | sample columns
+- `cluster_significance.txt`: cluster | status | loglr (lg likelihood) | df (degree freddom) | p | p.adj | genes  | annotations (functional tags present in cluster)
+- `effect_sizes.txt`: intron | logef_<group> (lg effect size of non-baseline group) | psi_<baseline> | psi_<group> | deltapsi_<group> 
+
 DESeq2.R 
-- ReadPerGene.out.tab
+- `ReadPerGene.out.tab`
     - Summary (first 4 rows): N_unmapped, N_multimapping, N_noFeature, N_ambiguous
     - filter low counts
 - GENE ID | Unstranded | Forward | Backward
-- compare w/ leafcutter's UP clusters. Increased unproductive/NMD splciing often means downregulation at total gene expression
+- `deseq2_scz_vs_bip.csv`: baseMean | log2FoldChange | lfcSE | stat | pvalue | padj
 
 Merging Results
-- lc2 + deseq2 integrated table headers: cluster,status,loglr,df,p,lc_padj,genes,annotations,intron,logef_Schizophrenia,psi_Bipolar,psi_Schizophrenia,deltapsi,func_type,gene_symbol,gene_id,baseMean,log2FoldChange,lfcSE,stat,pvalue,deseq_padj
+- `leafcutter2_deseq2_integrated.csv:` cluster | status | loglr | df | p | lc_padj | genes | annotations | intron | logef_Schizophrenia | psi_Bipolar | psi_Schizophrenia | deltapsi | func_type | gene_symbol | gene_id | baseMean | log2FoldChange | lfcSE | stat | pvalue | deseq_padj
+- compare w/ leafcutter's UP clusters. Increased unproductive/NMD splciing often means downregulation at total gene expression. For a gene that is transcriptionally downregulated in SCZ (lgFoldChange < 0), is there also a shift toward an unproductive (UP) isoform (func_type == "UP", deltapsi > 0)?

@@ -44,7 +44,6 @@ for R1_FILE in "${MERGED_DIR}"/*_R1.fastq.gz; do
         --outSAMtype BAM SortedByCoordinate \
         --outSAMstrandField intronMotif \
         --outSAMattributes NH HI AS nM XS \
-        --outFilterIntronMotifs RemoveNoncanonicalUnannotated \
         --outFileNamePrefix "${OUT_STAR}/${SAMPLE}_"
 
     # copy gene counts to results 

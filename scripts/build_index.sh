@@ -51,6 +51,7 @@ STAR \
     --genomeDir "${GENOME_DIR}" \
     --genomeFastaFiles "${FASTA}" \
     --sjdbGTFfile "${GTF}" \
+    --limitGenomeGenerateRAM 44000000000 \
     --sjdbOverhang 49
 
 echo "index build complete!"
