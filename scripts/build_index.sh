@@ -1,4 +1,10 @@
 #!/bin/bash
+#SBATCH --job-name=star_index
+#SBATCH --cpus-per-task=16
+#SBATCH --mem=48G
+#SBATCH --time=04:00:00
+#SBATCH --output=logs/star_index_%j.log
+
 set -euo pipefail
 
 cd "$(dirname "$0")/.."

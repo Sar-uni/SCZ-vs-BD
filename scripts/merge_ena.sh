@@ -1,7 +1,14 @@
 #!/bin/bash
+#SBATCH --job-name=merge_fastqs
+#SBATCH --cpus-per-task=4
+#SBATCH --mem=8G
+#SBATCH --time=04:00:00
+#SBATCH --output=logs/merge_%j.log
 set -euo pipefail
 
-mkdir -p data/merged_fastqs
+cd "$(dirname "$0")/.."
+
+mkdir -p data/merged_fastqs logs
 
 for dir in data/raw_fastqs/GSM*; do
     [[ -d "$dir" ]] || continue #empty check
