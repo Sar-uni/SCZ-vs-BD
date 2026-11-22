@@ -7,6 +7,7 @@ conda create -n bme -c conda-forge -c bioconda \
     regtools \
     fastqc \
     fastp \
+    scikit-learn \
     pandas \
     numpy \
     scipy \

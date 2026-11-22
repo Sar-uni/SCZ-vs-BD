@@ -74,6 +74,8 @@ Files Table formats
 - `.junction_counts.gz` (splicing feature matrix): intron id | sample columns
 - `cluster_significance.txt`: cluster | status | loglr (lg likelihood) | df (degree freddom) | p | p.adj | genes  | annotations (functional tags present in cluster)
 - `effect_sizes.txt`: intron | logef_<group> (lg effect size of non-baseline group) | psi_<baseline> | psi_<group> | deltapsi_<group> 
+- `.ratios.gz` - intron id | ratios (reads supporting junction / total cluster reads)
+    - 0/0 should be NaN (no supporting cluster coverage), not 0 (intron not used)
 
 DESeq2.R 
 - `ReadPerGene.out.tab`
@@ -85,3 +87,6 @@ DESeq2.R
 Merging Results
 - `leafcutter2_deseq2_integrated.csv:` cluster | status | loglr | df | p | lc_padj | genes | annotations | intron | logef_Schizophrenia | psi_Bipolar | psi_Schizophrenia | deltapsi | func_type | gene_symbol | gene_id | baseMean | log2FoldChange | lfcSE | stat | pvalue | deseq_padj
 - compare w/ leafcutter's UP clusters. Increased unproductive/NMD splciing often means downregulation at total gene expression. For a gene that is transcriptionally downregulated in SCZ (lgFoldChange < 0), is there also a shift toward an unproductive (UP) isoform (func_type == "UP", deltapsi > 0)?
+
+## Classification
+- create metadata, expression matrix (R), and splicing matrix standardized for GSM
