@@ -8,7 +8,7 @@
 set -euo pipefail
 cd "$(dirname "$0")/.."   
 
-# *requires leafcutter2 environment
+# *requires leafcutter2 environment AND NEW EXON FILE
 
 # Paths
 JUNC_DIR="results/junc"
@@ -19,8 +19,8 @@ SAMPLESHEET="data/samplesheet.tsv"
 SAMPLES_TXT="data/samples.txt"
 GROUP_SCRIPT="scripts/build_groupfile.py"
 
-GTF="ref/gencode/chr21.gtf"
-FASTA="ref/gencode/chr21.fa"
+GTF="ref/gencode/gencode.v50.primary_assembly.annotation.gtf"
+FASTA="ref/gencode/GRCh38.primary_assembly.genome.fa"
 EXON_FILE="ref/gencode/gencode_v50_exons.txt.gz"
 
 THREADS=16
@@ -66,8 +66,8 @@ echo "Running leafcutter-ds (baseline = Schizophrenia)"
 leafcutter-ds \
   --num_threads "${THREADS}" \
   --baseline_group Schizophrenia \
-  --min_samples_per_intron 1 \
-  --min_samples_per_group 1 \
+  --min_samples_per_intron 5 \
+  --min_samples_per_group 3 \
   --min_coverage 10 \
   --min_unique_vals 2 \
   --exon_file "${EXON_FILE}" \

@@ -1,56 +1,79 @@
 #!/bin/bash
+#SBATCH --job-name=lc2_post
+#SBATCH --cpus-per-task=16
+#SBATCH --mem=64G
+#SBATCH --time=24:00:00
+#SBATCH --output=logs/lc2_post_%j.log
+
 set -euo pipefail
+cd "$(dirname "$0")/.."   
 
-cd "$(dirname "$0")/.."
+# *requires leafcutter2 environment
 
-# Paths (GONNA CHANGE TO full .GTF and UNZIP .FA *)
+# Paths
+JUNC_DIR="results/junc"
 JUNC_MANIFEST="results/junc_files.txt"
 OUT_DIR="results/leafcutter2_test"
-GROUPS_FILE="${OUT_DIR}/groups_file.txt"
-GTF_FILE="ref/gencode/chr21.gtf"   
-FASTA_FILE="ref/gencode/chr21.fa"   
-EXON_FILE="ref/gencode/gencode_v50_exons.txt.gz"    
+GROUPS_FILE="results/leafcutter2/groups_file.txt"
+SAMPLESHEET="data/samplesheet.tsv"
+SAMPLES_TXT="data/samples.txt"
+GROUP_SCRIPT="scripts/build_groupfile.py"
 
-mkdir -p "${OUT_DIR}"
+GTF="ref/gencode/chr21.gtf"
+FASTA="ref/gencode/chr21.fa"
+EXON_FILE="ref/gencode/gencode_v50_exons.txt.gz"
 
-# Intron Clustering + functional classification: 
-#   junctions annotated as productive, unproductive, ambiguous, or intergenic based on GTF and FASTA
-echo "Clustering and classifying introns using leafcutter2"
+THREADS=16
+LC2_PREFIX="scz_vs_bip"
+DS_PREFIX="${OUT_DIR}/scz_vs_bip"
+
+mkdir -p "${OUT_DIR}" logs
+
+# feasta index required by lc2
+if [[ ! -f "${FASTA}.fai" ]]; then
+  echo "samtool indexing FASTA"
+  samtools faidx "${FASTA}"
+fi
+
+# exon table from GTF (need for gene labels in DS)
+if [[ ! -f "${EXON_FILE}" ]]; then
+  echo "-Creating exon table"
+  leafcutter-gtf-to-exons "${GTF}" "${EXON_FILE%.gz}"
+  gzip -f "${EXON_FILE%.gz}"
+fi
+
+ 
+echo "==Run leafcutter2 (full GENCODE v50)"
 leafcutter2 \
-    -j "${JUNC_MANIFEST}" \
-    -r "${OUT_DIR}" \
-    -o test_chr21 \
-    -A "${GTF_FILE}" \
-    -G "${FASTA_FILE}" \
-    --maxintronlen 500000 \
-    --minclureads 5 \
-    --mincluratio 0.0001
+  -j "${JUNC_MANIFEST}" \
+  -r "${OUT_DIR}" \
+  -o "${LC2_PREFIX}" \
+  -A "${GTF}" \
+  -G "${FASTA}" \
+  --minclureads 2 \
+  --mincluratio 0.0001
 
-# Leafcuter2 gives .junction_counts.gz (unlike perind)
-COUNTS_FILE="${OUT_DIR}/test_chr21.junction_counts.gz"
+COUNTS_FILE="${OUT_DIR}/${LC2_PREFIX}.junction_counts.gz"
+[[ -s "${COUNTS_FILE}" ]] || {
+  echo "ERROR: missing ${COUNTS_FILE}" >&2
+  exit 1
+}
 
-# Differential Splicing
-# tab-separate <sample_name> (GON CHANGE TO GSM FOR FINAL *) <condition> <covariates*>
-cat <<EOF > "${GROUPS_FILE}"
-SRR3438667	Bipolar
-SRR3438668	Schizophrenia
-SRR3438633	Schizophrenia
-SRR3438631	Bipolar
-EOF
+# build group file with covariates
+python3 ${GROUP_SCRIPT}
 
-# SMALL VALUES TEST *
-# requires exon file to map clusters to gene names
-echo "--leafcutter-ds"
+echo "Running leafcutter-ds (baseline = Schizophrenia)"
 leafcutter-ds \
-    --num_threads 4 \
-    --min_samples_per_intron 2 \
-    --min_samples_per_group 2 \
-    --min_coverage 5 \
-    --min_unique_vals 2 \
-    --exon_file "${EXON_FILE}" \
-    --output_prefix "${OUT_DIR}/bip_vs_scz" \
-    "${COUNTS_FILE}" \
-    "${GROUPS_FILE}"
+  --num_threads "${THREADS}" \
+  --baseline_group Schizophrenia \
+  --min_samples_per_intron 1 \
+  --min_samples_per_group 1 \
+  --min_coverage 2 \
+  --min_unique_vals 2 \
+  --exon_file "${EXON_FILE}" \
+  --output_prefix "${DS_PREFIX}" \
+  "${COUNTS_FILE}" \
+  "${GROUPS_FILE}"
 
-echo "Cluster significance : ${OUT_DIR}/bip_vs_scz_cluster_significance.txt"
-echo "Effect sizes (dPSI)  : ${OUT_DIR}/bip_vs_scz_effect_sizes.txt"
+ 
+echo "--leafcutter complete"

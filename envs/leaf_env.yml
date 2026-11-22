@@ -1,0 +1,22 @@
+name: leafcutter2
+channels:
+  - defaults
+  - pytorch
+  - conda-forge
+  - bioconda
+dependencies:
+  - python=3.11.1
+  - samtools
+  - bedparse=0.2.3
+  - numpy=2.1.3
+  - biopython=1.84
+  - pandas=2.2.3
+  - pyfastx=2.2.0
+  - pickleshare=0.7.5
+  - argparse-dataclass=2.0.0
+  - pytorch
+  - cpuonly
+  - pip
+  - pip:
+      - git+https://github.com/leafcutter2/leafcutter2.git
+      - git+https://github.com/leafcutter2/leafcutter-ds.git
