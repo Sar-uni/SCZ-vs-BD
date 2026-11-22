@@ -1,8 +1,8 @@
 #!/bin/bash
 #SBATCH --job-name=lc2_post
 #SBATCH --cpus-per-task=16
-#SBATCH --mem=64G
-#SBATCH --time=24:00:00
+#SBATCH --mem=16G
+#SBATCH --time=04:00:00
 #SBATCH --output=logs/lc2_post_%j.log
 
 set -euo pipefail
