@@ -1,4 +1,5 @@
-results/junc/SRR3438667.junc
-results/junc/SRR3438668.junc
-results/junc/SRR3438633.junc
-results/junc/SRR3438631.junc
+results/junc/GSM2132213.junc
+results/junc/GSM2132243.junc
+results/junc/GSM2132244.junc
+results/junc/GSM2132264.junc
+results/junc/GSM2132265.junc

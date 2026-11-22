@@ -1,4 +1,14 @@
 Sample	Filename	File type	Encoding	Total Sequences	Total Bases	Sequence length	Mean Length	Median Length	%GC	total_deduplicated_percentage	avg_sequence_length	median_sequence_length	basic_statistics	per_base_sequence_quality	per_sequence_quality_scores	per_base_sequence_content	per_sequence_gc_content	per_base_n_content	sequence_length_distribution	sequence_duplication_levels	overrepresented_sequences	adapter_content
+GSM2132213_R1	GSM2132213_R1.fastq.gz	Conventional base calls	Sanger / Illumina 1.9	100000.0	5 Mbp	50.0	50.0	50.0	51.0	93.328	50.0	50	pass	pass	pass	fail	warn	pass	pass	pass	pass	pass
+GSM2132213_R2	GSM2132213_R2.fastq.gz	Conventional base calls	Sanger / Illumina 1.9	100000.0	5 Mbp	50.0	50.0	50.0	51.0	93.33500000000001	50.0	50	pass	pass	pass	fail	warn	pass	pass	pass	pass	pass
+GSM2132243_R1	GSM2132243_R1.fastq.gz	Conventional base calls	Sanger / Illumina 1.9	100000.0	5 Mbp	50.0	50.0	50.0	52.0	92.702	50.0	50	pass	pass	pass	fail	warn	pass	pass	pass	pass	pass
+GSM2132243_R2	GSM2132243_R2.fastq.gz	Conventional base calls	Sanger / Illumina 1.9	100000.0	5 Mbp	50.0	50.0	50.0	52.0	92.889	50.0	50	pass	pass	pass	fail	warn	pass	pass	pass	pass	pass
+GSM2132244_R1	GSM2132244_R1.fastq.gz	Conventional base calls	Sanger / Illumina 1.9	100000.0	5 Mbp	50.0	50.0	50.0	53.0	94.76400000000001	50.0	50	pass	pass	pass	fail	warn	pass	pass	pass	pass	pass
+GSM2132244_R2	GSM2132244_R2.fastq.gz	Conventional base calls	Sanger / Illumina 1.9	100000.0	5 Mbp	50.0	50.0	50.0	53.0	94.788	50.0	50	pass	pass	pass	fail	warn	pass	pass	pass	pass	pass
+GSM2132264_R1	GSM2132264_R1.fastq.gz	Conventional base calls	Sanger / Illumina 1.9	100000.0	5 Mbp	50.0	50.0	50.0	50.0	90.036	50.0	50	pass	pass	pass	fail	pass	pass	pass	pass	warn	pass
+GSM2132264_R2	GSM2132264_R2.fastq.gz	Conventional base calls	Sanger / Illumina 1.9	100000.0	5 Mbp	50.0	50.0	50.0	50.0	91.156	50.0	50	pass	pass	pass	fail	pass	pass	pass	pass	pass	pass
+GSM2132265_R1	GSM2132265_R1.fastq.gz	Conventional base calls	Sanger / Illumina 1.9	100000.0	5 Mbp	50.0	50.0	50.0	50.0	93.176	50.0	50	pass	pass	pass	fail	pass	pass	pass	pass	pass	pass
+GSM2132265_R2	GSM2132265_R2.fastq.gz	Conventional base calls	Sanger / Illumina 1.9	100000.0	5 Mbp	50.0	50.0	50.0	51.0	94.16600000000001	50.0	50	pass	pass	pass	fail	pass	pass	pass	pass	pass	pass
 SRR3438631_1.sub	SRR3438631_1.sub.fastq.gz	Conventional base calls	Sanger / Illumina 1.9	250000.0	12.5 Mbp	50.0	50.0	50.0	52.0	89.10670765563657	50.0	50	pass	pass	pass	fail	warn	pass	pass	pass	pass	pass
 SRR3438631_2.sub	SRR3438631_2.sub.fastq.gz	Conventional base calls	Sanger / Illumina 1.9	250000.0	12.5 Mbp	50.0	50.0	50.0	52.0	89.27666115624152	50.0	50	pass	pass	pass	fail	warn	pass	pass	pass	pass	pass
 SRR3438633_1.sub	SRR3438633_1.sub.fastq.gz	Conventional base calls	Sanger / Illumina 1.9	250000.0	12.5 Mbp	50.0	50.0	50.0	53.0	91.73847111439768	50.0	50	pass	pass	pass	fail	warn	pass	pass	pass	pass	pass

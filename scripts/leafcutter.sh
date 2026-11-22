@@ -8,11 +8,9 @@
 set -euo pipefail
 cd "$(dirname "$0")/.."   
 
-# *requires conda leafcutter2 environment
-
+# *requires leafcutter2 environment
 
 # Paths
- 
 JUNC_DIR="results/junc"
 JUNC_MANIFEST="results/junc_files.txt"
 OUT_DIR="results/leafcutter2"
