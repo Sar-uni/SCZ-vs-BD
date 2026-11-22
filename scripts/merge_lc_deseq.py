@@ -6,8 +6,8 @@ import re
 import pandas as pd
 
 # load leafcutter-ds outputs
-sig = pd.read_csv("results/leafcutter2_test/bip_vs_scz_cluster_significance.txt", sep="\t")
-eff = pd.read_csv("results/leafcutter2_test/bip_vs_scz_effect_sizes.txt", sep="\t")
+sig = pd.read_csv("results/leafcutter2/scz_vs_bip_cluster_significance.txt", sep="\t")
+eff = pd.read_csv("results/leafcutter2/scz_vs_bip_effect_sizes.txt", sep="\t")
 
 # rename 'deltapsi_smth' (ex. deltapsi_Schizophrenia) to 'deltapsi'
 dpsi_cols = [c for c in eff.columns if c.startswith("deltapsi")]

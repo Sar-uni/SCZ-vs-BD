@@ -51,17 +51,23 @@ def check_groups(cov, y):
                  cov["sex"][y == 0].mean(), p_sex))
     return pd.DataFrame(rows, columns=["variable", "SCZ", "BD", "p"])
 
-# 2.
-# alignment done seperately
 
-# 3.
 def filter_features(table, minV=0.0, maxM=0.2):
     '''
     TO DO
-    minV = minimum varinace
-    maxM = max missing
-    drop features with too much missing data or near-zero variance
-    and return that table
+    Drop bad features. Does NOT use diagnosis labels.
+
+    table = DataFrame, samples as rows, features as columns
+    minV  = minimum variance (drop features at or below this)
+    maxM  = max fraction of missing values allowed (drop features above this)
+
+    Steps:
+      1. missing_fraction = fraction of NaN in each column  (table.isna().mean())
+      2. variance of each column                            (table.var())
+      3. keep columns with missing_fraction <= maxM AND variance > minV
+      4. return table with only those columns
+
+    Returns the filtered DataFrame
     '''
     keep_missing = table.isna().mean() <= maxM
     keep_var = table.var() > minV
@@ -82,7 +88,14 @@ def model_factory(c=0.1, k=None):
              ("scale", StandardScaler())]
     if k is not None:
         steps.append(("select", SelectKBest(f_classif, k=k)))
-    steps.append(("clf", LogisticRegression(C=c, max_iter=5000)))
+    steps.append(("clf", LogisticRegression(
+        penalty="l1",
+        solver="saga",
+        C=c,
+        class_weight="balanced",
+        max_iter=5000,
+        random_state=42
+    )))
 
     return Pipeline(steps)
 
@@ -92,7 +105,12 @@ def make_baseline_model(C=0.1):
     return Pipeline([
         ("impute", SimpleImputer(strategy="median")),
         ("scale", StandardScaler()),
-        ("clf", LogisticRegression(C=C, max_iter=5000)),
+        ("clf", LogisticRegression(
+            penalty="l1",
+            solver="saga",
+            C=C, max_iter=5000, 
+            class_weight="balanced", 
+            random_state=42)),
     ])
 
 
@@ -134,24 +152,6 @@ def top_features(X, y, k=100, n_top=10, repeats=5, seed=0):
         counts[names[chosen]] += 1
     return counts.sort_values(ascending=False).head(n_top)
 
-def filter_features(table, minV=0.0, maxM=0.2):
-    '''
-    TO DO
-    Drop bad features. Does NOT use diagnosis labels.
-
-    table = DataFrame, samples as rows, features as columns
-    minV  = minimum variance (drop features at or below this)
-    maxM  = max fraction of missing values allowed (drop features above this)
-
-    Steps:
-      1. missing_fraction = fraction of NaN in each column  (table.isna().mean())
-      2. variance of each column                            (table.var())
-      3. keep columns with missing_fraction <= maxM AND variance > minV
-      4. return table with only those columns
-
-    Returns the filtered DataFrame
-    '''
-    pass
 
 def permutation_test(X, y, k=None, n_perm=200, repeats=2, seed=3):
     '''
