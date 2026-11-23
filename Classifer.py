@@ -327,6 +327,83 @@ def top_features(X, y, k=100, n_top=10, repeats=5, seed=0):
         counts[names[chosen]] += 1
     return counts.sort_values(ascending=False).head(n_top)
 
+def top_feature_selection(X,y,model_name,k=50,c=0.1,n_splits=5,n_repeats=20,seed=42):
+    """
+    *DRAFT*
+    measures how consistently features are selected and retained by L1 logistic regression 
+    across CV folds.
+    """
+    y = np.asarray(y)
+    names = np.asarray(X.columns)
+    cv = RepeatedStratifiedKFold(n_splits=n_splits,n_repeats=n_repeats,random_state=seed)
+    records = []
+    fold_number = 0
+
+    for train_idx, _ in cv.split(X, y):
+        fold_number += 1
+        model = model_factory(c=c,k=k)
+        model.fit(X.iloc[train_idx],y[train_idx])
+
+        # Features remaining after variance filtering and selection
+        variance_mask = (model.named_steps["variance"].get_support())
+        variance_names = names[variance_mask]
+        selected_mask = (model.named_steps["select"].get_support())
+        selected_names = variance_names[selected_mask]
+
+        # L1 coefficients
+        coefficients = (model.named_steps["clf"].coef_.ravel())
+
+        for feature, coef in zip(selected_names, coefficients):
+            records.append({
+                "feature": feature,
+                "fold": fold_number,
+                "coefficient": coef,
+                "nonzero": abs(coef) > 1e-8
+            })
+
+    selected_df = pd.DataFrame(records)
+
+    # Include features that were never selected
+    summary = pd.DataFrame(index=names)
+    selection_count = (selected_df.groupby("feature").size())
+    nonzero_count = (
+        selected_df[selected_df["nonzero"]]
+        .groupby("feature").size()
+    )
+
+    summary["selected_count"] = (selection_count.reindex(names, fill_value=0))
+    summary["selection_frequency"] = (summary["selected_count"] / fold_number)
+    summary["nonzero_count"] = (nonzero_count.reindex(names, fill_value=0))
+    summary["nonzero_frequency"] = (summary["nonzero_count"] / fold_number)
+    summary["mean_coefficient"] = (
+        selected_df.groupby("feature")["coefficient"]
+        .mean()
+        .reindex(names)
+    )
+
+    # Direction consistency in non zero coeffs
+    positive = (
+        selected_df[selected_df["coefficient"] > 1e-8]
+        .groupby("feature").size()
+    )
+    negative = (
+        selected_df[selected_df["coefficient"] < -1e-8]
+        .groupby("feature").size()
+    )
+
+    positive = positive.reindex(names, fill_value=0)
+    negative = negative.reindex(names, fill_value=0)
+
+    summary["direction_consistency"] = (
+        np.maximum(positive, negative)
+        / summary["nonzero_count"].replace(0, np.nan)
+    )
+    summary.index.name = "feature"
+    summary = summary.reset_index()
+    summary.insert(0, "model", model_name)
+
+    return summary.sort_values(["selection_frequency", "nonzero_frequency"],ascending=False)
+
 def permutation_test(feature_sets,y,observed_results,k=50,c=0.1,n_splits=5,n_repeats=20,n_perm=100,seed=3):
     '''
     Is the model's AUROC better than luck?
@@ -541,6 +618,26 @@ def main():
     perm_summary.to_csv("results/classification/permutation_test_summary.csv",index=False)
     perm_null.to_csv("results/classification/permutation_null_distributions.csv",index=False)
 
+    print("\nFeature selection extended;")
+    stability_results = []
+    for name in ["expression", "splicing", "combined"]:
+        print(f"\nProcessing {name}...")
+
+        stability = top_feature_selection(
+            X=feature_sets[name],
+            y=y,
+            model_name=name,
+            k=50,
+            c=0.1,
+            n_splits=5,
+            n_repeats=20,
+            seed=42
+        )
+        stability_results.append(stability)
+        stability.to_csv(f"results/classification/{name}_feature_stability.csv",index=False)
+        print("\nTop 10 features:")
+        print(stability.head(10).round(3).to_string(index=False))
+    
     print("\nPaired model comparison:")
     paired_results = paired_model_comparison(results)
     print(paired_results.round(3).to_string(index=False))
