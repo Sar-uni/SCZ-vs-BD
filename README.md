@@ -90,3 +90,10 @@ Merging Results
 
 ## Classification
 - create metadata, expression matrix (R), and splicing matrix standardized for GSM
+- produce counts with prepare_counts.py -> then prepare_expression.R -> then Classifier.py
+    - issue: preprocessing should be using training samples in CV fold (maybe later) 
+- compute AUROC for each repeat instead of fold (only 9 samples per fold)
+- permutation test: shuffle diagnosis. Peferable to testing if AUROC is diff from 0.5 bc it accounts for the feature-selection and model fitting process.
+- DLPFC (brain region) has high alternative splicing, so expect have 3-4x more features
+- The 20 repeats reuse the 47 samples. They provide infoo about sensitivity to data partitioning, but they are not 20 independent validation cohorts. mean and standard deviation are useful descriptive summaries. Not treating them as independent observations for significance testing.
+- feature selection: a feature selected across many folds is more interesting
