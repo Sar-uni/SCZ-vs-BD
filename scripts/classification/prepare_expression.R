@@ -1,4 +1,8 @@
 # Create expression matrix w/ DESeq2
+# rm small expression genes
+# Normalize for library size and composition
+# scale for modelling
+# samples x genes matrix for classification
 library(DESeq2)
 
 counts <- read.csv(
@@ -7,8 +11,8 @@ counts <- read.csv(
     check.names = FALSE
 )
 
-# rm genes w low expression (*ONLY 10 COUNTS AND 2 SAMPLes FOR TESTING)
-keep <- colSums(counts >= 10) >= 2
+# rm genes w low expression
+keep <- colSums(counts >= 10) >= 5
 counts <- counts[, keep, drop = FALSE]
 
 # count data
