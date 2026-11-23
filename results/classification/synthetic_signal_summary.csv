@@ -1,0 +1,6 @@
+model,mean,std,min,max
+combined_signal,0.675,0.054,0.594,0.764
+expression_original,0.448,0.058,0.321,0.534
+expression_signal,0.615,0.089,0.426,0.786
+splicing_original,0.493,0.023,0.433,0.543
+splicing_signal,0.698,0.066,0.577,0.792
