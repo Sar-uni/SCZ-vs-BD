@@ -1,3 +1,0 @@
-Gene_name	Intron_coord	PTC_position	Exon_length
-APP	chr21:26002532-26021839	151.5	157.5
-APP	chr21:26000180-26021839	153	165

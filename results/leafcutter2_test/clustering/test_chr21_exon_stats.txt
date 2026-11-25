@@ -1,3 +1,0 @@
-Gene_name	Intron_coord	Exons_before	Exons_after
-APP	chr21:26002532-26021839	1.0	6.5
-APP	chr21:26000180-26021839	6.0	9.0

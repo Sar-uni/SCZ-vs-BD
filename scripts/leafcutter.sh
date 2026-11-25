@@ -1,7 +1,7 @@
 #!/bin/bash
 #SBATCH --job-name=lc2_post
-#SBATCH --cpus-per-task=16
-#SBATCH --mem=16G
+#SBATCH --cpus-per-task=8
+#SBATCH --mem=10G
 #SBATCH --time=04:00:00
 #SBATCH --output=logs/lc2_post_%j.log
 
@@ -19,11 +19,11 @@ SAMPLESHEET="data/samplesheet.tsv"
 SAMPLES_TXT="data/samples.txt"
 GROUP_SCRIPT="scripts/build_groupfile.py"
 
-GTF="ref/gencode/gencode.v50.primary_assembly.annotation.gtf"
+GTF="ref/gencode/gencode.v50.primary_assembly.annotation.gtf.gz"
 FASTA="ref/gencode/GRCh38.primary_assembly.genome.fa"
 EXON_FILE="ref/gencode/gencode_v50_exons.txt.gz"
 
-THREADS=16
+THREADS=2
 LC2_PREFIX="scz_vs_bip"
 DS_PREFIX="${OUT_DIR}/scz_vs_bip"
 

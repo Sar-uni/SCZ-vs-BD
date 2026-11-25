@@ -88,34 +88,34 @@ def prepare_matrices():
     """
     meta = load_metadata()
     expr = load_expression_matrix()
-    # spl, coverage = load_leafcutter_ratios()
+    spl, coverage = load_leafcutter_ratios()
     
     # match same samples
     common = (
         meta.index
         .intersection(expr.index)
-        # .intersection(spl.index)
+        .intersection(spl.index)
     )
 
     meta = meta.loc[common]
     expr = expr.loc[common]
-    # spl = spl.loc[common]
+    spl = spl.loc[common]
 
     # Ensure sample ordering
     assert meta.index.equals(expr.index)
-    # assert meta.index.equals(spl.index)
+    assert meta.index.equals(spl.index)
 
     out = Path("results/classification")
     out.mkdir(parents=True, exist_ok=True)
 
     meta.to_csv(out / "metadata_matched.csv")
     expr.to_csv(out / "expression_matrix_matched.csv")
-    # spl.to_csv(out / "splicing_matrix.csv")
-    # coverage.loc[common].to_csv(
-    #     out / "splicing_coverage.csv"
-    # )
+    spl.to_csv(out / "splicing_matrix.csv")
+    coverage.loc[common].to_csv(
+        out / "splicing_coverage.csv"
+    )
     ############# TESTING ONLY
-    spl = pd.read_csv("results/classification/splicing_matrix.csv", index_col=0)
+    # spl = pd.read_csv("results/classification/splicing_matrix.csv", index_col=0)
 
     print(meta["diagnosis"].value_counts())
     print("exp features:", expr.shape[1])
@@ -344,10 +344,12 @@ def top_feature_selection(X,y,model_name,k=50,c=0.1,n_splits=5,n_repeats=20,seed
         model = model_factory(c=c,k=k)
         model.fit(X.iloc[train_idx],y[train_idx])
 
+        # feature names after imputation
+        imputed_names = model.named_steps["impute"].get_feature_names_out(names)
         # Features remaining after variance filtering and selection
-        variance_mask = (model.named_steps["variance"].get_support())
-        variance_names = names[variance_mask]
-        selected_mask = (model.named_steps["select"].get_support())
+        variance_mask = model.named_steps["variance"].get_support()
+        variance_names = imputed_names[variance_mask]
+        selected_mask = model.named_steps["select"].get_support()
         selected_names = variance_names[selected_mask]
 
         # L1 coefficients
@@ -609,14 +611,14 @@ def main():
         c=0.1,
         n_splits=5,
         n_repeats=5,
-        n_perm=2,
+        n_perm=3,
         seed=123
     )
 
-    print("\nPermutation test results:")
-    print(perm_summary.round(3))
-    perm_summary.to_csv("results/classification/permutation_test_summary.csv",index=False)
-    perm_null.to_csv("results/classification/permutation_null_distributions.csv",index=False)
+    # print("\nPermutation test results:")
+    # print(perm_summary.round(3))
+    # perm_summary.to_csv("results/classification/permutation_test_summary.csv",index=False)
+    # perm_null.to_csv("results/classification/permutation_null_distributions.csv",index=False)
 
     print("\nFeature selection extended;")
     stability_results = []
@@ -670,7 +672,7 @@ def main():
         print("-> no detectable difference")
 
     print("\nTop splicing events (times selected across folds):")
-    print(top_features(spl, y, k=K))
+    # print(top_features(spl, y, k=K))
 
 if __name__ == "__main__":
     main()
